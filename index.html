@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AICoin套利策略工具 - 专业加密货币套利解决方案</title>
+    <meta name="description" content="AICoin套利策略工具是一款专为套利新手和专业交易者打造的套利工具，拥有自动化套利，半自动套利开仓、平仓，跨平台专业套利等多项功能">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.01em;
+            line-height: 1.6;
+            background-color: #000000; /* 更深的背景色 */
+            color: #ffffff;
+            position: relative;
+            z-index: 1;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #4080ff 0%, #10B981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+        .card-hover {
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease, transform 0.5s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            background-color: rgba(26, 32, 44, 0.6); /* 与bg-dark-100保持一致 */
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 12px;
+            overflow: hidden;
+            border: none !important; /* 移除边框 */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3),
+                        inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+        }
+        .card-hover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 15%,
+                rgba(0, 0, 0, 0) 50%,
+                rgba(0, 0, 0, 0.05) 85%
+            );
+            z-index: 0;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+            border-radius: 12px;
+        }
+        .card-hover:hover {
+            box-shadow: 0 15px 30px -10px rgba(64, 128, 255, 0.4),
+                        inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+            border: none !important; /* 确保悬停时也没有边框 */
+        }
+        
+        /* 修复太空背景在整个页面的显示 */
+        .space-background {
+            position: fixed;  /* 保持固定定位 */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -10;  /* 降低z-index确保在所有内容之下 */
+            background-color: #000000;
+            background-image: 
+                radial-gradient(circle at 50% 100%, rgba(30, 41, 59, 0.4) 0%, transparent 70%),
+                radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(124, 58, 237, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        /* 确保内容容器不会覆盖背景 */
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+            background-color: transparent !important; /* 移除任何可能的背景色 */
+        }
+        
+        /* 确保所有区块都是透明的 */
+        #features, 
+        #how-it-works, 
+        #testimonials, 
+        #download,
+        .py-12,
+        .py-16 {
+            background-color: transparent !important;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* 修复可能的背景覆盖问题 */
+        .bg-black,
+        .bg-dark-200,
+        .bg-opacity-30,
+        .bg-gradient-to-r {
+            background-color: transparent !important;
+            background-image: none !important;
+        }
+        
+        /* 为部分区块添加半透明背景，增强可读性 */
+        .section-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            border-radius: 0; /* 移除圆角 */
+            border: none; /* 移除边框 */
+            margin: 0; /* 移除外边距 */
+            padding: 2rem 0; /* 添加内边距 */
+        }
+        
+        /* 确保页脚不会被覆盖 */
+        footer {
+            position: relative;
+            z-index: 1;
+            background-color: rgba(17, 24, 39, 0.8) !important;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* 分散的光束效果 */
+        .light-beam {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                ellipse at 50% 50%, 
+                rgba(255, 255, 255, 0.03) 0%, 
+                transparent 70%
+            );
+            opacity: 0.7;
+        }
+        
+        /* 额外的光束 */
+        .light-beam::before,
+        .light-beam::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(
+                ellipse at 50% 50%, 
+                rgba(64, 128, 255, 0.05) 0%, 
+                transparent 60%
+            );
+            opacity: 0.5;
+        }
+        
+        .light-beam::after {
+            background: radial-gradient(
+                ellipse at 50% 50%, 
+                rgba(124, 58, 237, 0.05) 0%, 
+                transparent 60%
+            );
+            opacity: 0.3;
+        }
+        
+        /* 星星效果增强 */
+        .star {
+            position: absolute;
+            background-color: #ffffff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle var(--duration) infinite ease-in-out;
+            animation-delay: var(--delay);
+            box-shadow: 0 0 var(--glow-size) var(--glow-color);
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.05; } /* 降低最低不透明度 */
+            50% { opacity: var(--opacity); }
+        }
+        
+        /* 移除鼠标跟随粒子效果的样式 */
+        .interactive-star {
+            display: none; /* 隐藏互动星星 */
+        }
+        
+        /* 减弱鼠标指针周围的发光效果 */
+        .cursor-glow {
+            display: none; /* 完全移除鼠标发光效果 */
+        }
+        
+        /* 星云效果 */
+        .nebula {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 30% 70%, rgba(56, 189, 248, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 70% 30%, rgba(139, 92, 246, 0.03) 0%, transparent 40%);
+            filter: blur(30px);
+            opacity: 0.5;
+        }
+        
+        /* 居中的英雄区域 */
+        .hero-centered {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding-top: 120px;
+            padding-bottom: 80px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* 大标题样式 */
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, #ffffff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(165, 180, 252, 0.3);
+        }
+        
+        /* 副标题样式 */
+        .hero-subtitle {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: #e5e7eb;
+            margin-bottom: 2rem;
+        }
+        
+        /* 描述文字样式 */
+        .hero-description {
+            font-size: 1.25rem;
+            color: #9ca3af;
+            max-width: 600px;
+            margin: 0 auto 2.5rem auto;
+        }
+        
+        /* 数据指标样式 */
+        .hero-metric {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-top: 3rem;
+        }
+        
+        .hero-metric-label {
+            font-size: 1.25rem;
+            color: #9ca3af;
+            margin-top: 0.5rem;
+        }
+        
+        /* 按钮样式 */
+        .hero-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #ffffff;
+            background-color: rgba(64, 128, 255, 0.8);
+            border-radius: 0.375rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(64, 128, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .hero-button:hover {
+            background-color: rgba(64, 128, 255, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(64, 128, 255, 0.6);
+        }
+        
+        
+        /* 卡片背景色修复 */
+        .bg-dark-100 {
+            background-color: rgba(26, 32, 44, 0.6) !important; /* 深色背景带透明度 */
+            backdrop-filter: blur(15px); /* 增强模糊效果 */
+            -webkit-backdrop-filter: blur(15px);
+            border: none !important; /* 移除边框 */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3),
+                        inset 0 0 0 1px rgba(255, 255, 255, 0.07); /* 保留内阴影增强磨砂感 */
+        }
+        
+        /* 添加颗粒纹理 */
+        .card-texture {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.12; /* 增强纹理可见度 */
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
+            mix-blend-mode: soft-light; /* 改为soft-light以增强纹理效果 */
+            border-radius: 12px;
+        }
+        
+        /* 图标背景色修复 */
+        .bg-primary\/20 {
+            background-color: rgba(64, 128, 255, 0.2) !important; /* 主色调带透明度 */
+        }
+        
+        /* 确保图标容器有正确的样式 */
+        .w-12.h-12.rounded-md.bg-primary\/20,
+        .flex.items-center.justify-center.h-12.w-12.rounded-md.bg-primary\/20 {
+            background-color: rgba(64, 128, 255, 0.2) !important;
+            border: 1px solid rgba(64, 128, 255, 0.3);
+            box-shadow: 0 0 10px rgba(64, 128, 255, 0.1);
+        }
+        
+        /* 定义主色调文本颜色 */
+        .text-primary {
+            color: #4080ff !important;
+        }
+        
+        
+        
+        /* 透明卡片样式 */
+        .transparent-card {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(3px);
+            border-radius: 12px;
+        
+            overflow: hidden;
+        }
+        
+        /* 为特定内容添加卡片样式，而不是整个区块 */
+        .content-card {
+            background-color: rgba(17, 24, 39, 0.6);
+            backdrop-filter: blur(5px);
+            border-radius: 12px;
+        
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* 确保区块之间没有可见的分隔 */
+        #features, 
+        #how-it-works, 
+        #testimonials, 
+        #download,
+        .py-12,
+        .py-16 {
+            background-color: transparent !important;
+            position: relative;
+            z-index: 1;
+            border: none !important;
+            box-shadow: none !important;
+        }
+        
+        /* 移除所有可能的分隔线 */
+        hr, .border-t, .border-b, .border-gray-800, .border-gray-700 {
+            display: none !important;
+        }
+        
+        /* 调整区块间距 */
+        .py-12, .py-16 {
+            padding-top: 6rem;
+            padding-bottom: 6rem;
+        }
+        
+        /* 确保页脚没有边框 */
+        footer {
+            border-top: none !important;
+        }
+        
+        /* 滚动卡片样式 - 增加卡片间距 */
+        .scrolling-cards {
+            width: 100%;
+            overflow: visible; /* 允许卡片放大时超出容器 */
+            position: relative;
+            padding: 20px 0; /* 上下内边距 */
+        }
+        
+        .scrolling-cards-inner {
+            display: flex;
+            animation: scrollCards 30s linear infinite;
+            width: max-content;
+            padding: 10px 0; /* 为放大效果提供额外空间 */
+        }
+        
+        .scrolling-card {
+            flex: 0 0 auto;
+            width: 280px;
+            background-color: rgba(26, 32, 44, 0.6); /* 与bg-dark-100保持一致 */
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: none !important; /* 移除边框 */
+            border-radius: 12px;
+            padding: 16px;
+            margin-right: 24px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            z-index: 1;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3),
+                        inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+        }
+        
+        .scrolling-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 15%,
+                rgba(0, 0, 0, 0) 50%,
+                rgba(0, 0, 0, 0.05) 85%
+            );
+            z-index: 0;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+            border-radius: 12px;
+        }
+        
+        .scrolling-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px -10px rgba(64, 128, 255, 0.4),
+                        inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+            border: none !important; /* 确保悬停时也没有边框 */
+        }
+        
+        .scrolling-card:hover::before {
+            opacity: 0.7;
+        }
+        
+        /* 减弱卡片光泽效果 */
+        .card-shine {
+            opacity: 0.08 !important; /* 大幅减弱光泽效果 */
+        }
+        
+        /* 创建一个外部容器来控制溢出 */
+        .scrolling-cards-container {
+            overflow: hidden;
+            position: relative;
+        }
+        
+        @keyframes scrollCards {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(-280px * 5 - 40px * 5)); /* 更新间距计算 */
+            }
+        }
+        
+        /* 当鼠标悬停在容器上时暂停滚动 */
+        .scrolling-cards:hover .scrolling-cards-inner {
+            animation-play-state: paused;
+        }
+    
+    /* 添加图片堆叠样式 */
+    .image-stack {
+    position: relative;
+    width: 100%;
+    height: auto; /* 保持自适应高度 */
+    min-height: 400px; /* 保持最小高度 */
+    perspective: 1000px;
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+    margin: 0 auto; /* 居中对齐 */
+    margin-left: 2rem; /* 增加与左侧内容的间距 */
+    }
+    
+    .image-container {
+        position: absolute;
+        width: 80%; /* 保持宽度 */
+        transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: transparent;
+    }
+    
+    /* 创建对角线交错效果 */
+    .first-image {
+        transform: translate(-25%, -25%); /* 左上角偏移 */
+        z-index: 2;
+    }
+    
+    .second-image {
+        transform: translate(25%, 25%); /* 右下角偏移 */
+        z-index: 1;
+    }
+    
+/* 修改悬停效果：两张图片都使用相似的放大效果 */
+.first-image:hover {
+    transform: translate(-25%, -25%) scale(1.05) !important; /* 保持位置但稍微放大 */
+    box-shadow: 0 15px 30px rgba(64, 128, 255, 0.3); /* 增强阴影效果 */
+}
+
+.second-image:hover {
+    z-index: 10 !important; /* 悬停时提升到最上层 */
+    transform: translate(25%, 25%) scale(1.05) !important; /* 保持位置但稍微放大 */
+    box-shadow: 0 15px 30px rgba(64, 128, 255, 0.3); /* 增强阴影效果 */
+}
+
+/* 移除content-card类可能带来的背景色 */
+.image-container img.content-card {
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important; /* 移除可能的内部阴影 */
+}
+    </style>
+</head>
+<body class="bg-dark-300 text-gray-100">
+    <!-- 太空背景 -->
+    <div class="space-background" id="spaceBackground">
+        <div class="nebula"></div>
+        <div class="light-beam"></div>
+        <!-- 星星会由JavaScript生成 -->
+    </div>
+    
+    <!-- 内容包装器开始 - 所有内容都在这个div内 -->
+    <div class="content-wrapper">
+        <!-- 导航栏 -->
+        <!-- <nav class="bg-dark-200 border-b border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex items-center">
+                            <i class="fas fa-coins text-primary text-2xl mr-2"></i>
+                            <span class="font-bold text-xl">AICoin</span>
+                        </div>
+                        <div class="hidden md:ml-6 md:flex md:space-x-8">
+                            <a href="#features" class="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">功能特点</a>
+                            <a href="#advantages" class="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">产品优势</a>
+                            <a href="#testimonials" class="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">用户评价</a>
+                            <a href="#faq" class="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">常见问题</a>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <a href="#download" class="bg-blue-600 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover-scale">立即下载</a>
+                    </div>
+                    <div class="md:hidden flex items-center">
+                        <button type="button" class="mobile-menu-button text-gray-400 hover:text-white">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- 移动端菜单 -->
+         <!--   <div class="mobile-menu hidden md:hidden border-t border-gray-800">
+                <div class="px-2 py-3 space-y-1">
+                    <a href="#features" class="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium">功能特点</a>
+                    <a href="#advantages" class="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium">产品优势</a>
+                    <a href="#testimonials" class="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium">用户评价</a>
+                    <a href="#faq" class="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium">常见问题</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 英雄区域 - 居中设计 -->
+        <div class="relative overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="hero-centered">
+                    <h1 class="hero-title">AICoin 套利工具</h1>
+                    <p class="hero-subtitle">让套利更高效</p>
+                    <p class="hero-description" style="color: #acadae;">
+                        一款专为套利新手和专业交易者打造的工具，实现自动化套利，轻松赚取稳定收益。
+                    </p>
+                    
+                    <div>
+                        <a href="#download" class="hero-button">
+                            <i class="fas fa-download mr-2"></i> 立即下载体验
+                        </a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- 策略部分 -->
+        <div class="py-12 bg-black bg-opacity-50 relative z-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
+                        海量策略选择
+                    </h2>
+                    <p class="mt-3 max-w-2xl mx-auto text-xl text-gray-400 sm:mt-4">
+                        多种精选策略，超高年化收益
+                    </p>
+                </div>
+                
+                <div class="mt-10">
+                    <div class="scrolling-cards-container">
+                        <div class="scrolling-cards">
+                            <div class="scrolling-cards-inner">
+                                <!-- 卡片1 -->
+                                <div class="scrolling-card">
+                                    <div class="flex items-center mb-4">
+                                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center mr-3">
+                                            <img src="images/aicoinLogo.svg" alt="AICoin Logo" class="w-6 h-6">
+                                        </div>
+                                        <div>
+                                            <div class="text-white font-medium">FIL</div>
+                                            <div class="text-gray-400 text-sm">欧易OKX USDT永续</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-green-400 text-2xl font-bold mb-2">+21.86%</div>
+                                    <div class="text-gray-400 text-sm mb-3">7日年化收益率</div>
+                                    <div class="h-16 bg-black bg-opacity-20 rounded-md relative overflow-hidden">
+                                        <svg width="100%" height="100%" viewBox="0 0 100 30" preserveAspectRatio="none">
+                                            <path d="M0,20 L10,15 L20,25 L30,18 L40,22 L50,20 L60,15 L70,18 L80,12 L90,15 L100,10" 
+                                                  stroke="#10B981" fill="none" stroke-width="1.5"></path>
+                                            <path d="M0,20 L10,15 L20,25 L30,18 L40,22 L50,20 L60,15 L70,18 L80,12 L90,15 L100,10 L100,30 L0,30Z" 
+                                                  fill="url(#greenGradient)" opacity="0.2"></path>
+                                            <defs>
+                                                <linearGradient id="greenGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                    <stop offset="0%" stop-color="#10B981" />
+                                                    <stop offset="100%" stop-color="#10B981" stop-opacity="0" />
+                                                </linearGradient>
+                                            </defs>
+                                        </svg>
+                                    </div>
+                                </div>
+                                
+                                <!-- 卡片2 -->
+                                <div class="scrolling-card">
+                                    <div class="flex items-center mb-4">
+                                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center mr-3">
+                                            <img src="images/aicoinLogo.svg" alt="AICoin Logo" class="w-6 h-6">
+                                        </div>
+                                        <div>
+                                            <div class="text-white font-medium">BTC</div>
+                                            <div class="text-gray-400 text-sm">币安 USDT永续</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-green-400 text-2xl font-bold mb-2">+12.14%</div>
+                                    <div class="text-gray-400 text-sm mb-3">7日年化收益率</div>
+                                    <div class="h-16 bg-black bg-opacity-20 rounded-md relative overflow-hidden">
+                                        <svg width="100%" height="100%" viewBox="0 0 100 30" preserveAspectRatio="none">
+                                            <path d="M0,25 L10,20 L20,15 L30,18 L40,12 L50,10 L60,15 L70,8 L80,12 L90,5 L100,10" 
+                                                  stroke="#10B981" fill="none" stroke-width="1.5"></path>
+                                            <path d="M0,25 L10,20 L20,15 L30,18 L40,12 L50,10 L60,15 L70,8 L80,12 L90,5 L100,10 L100,30 L0,30Z" 
+                                                  fill="url(#greenGradient2)" opacity="0.2"></path>
+                                            <defs>
+                                                <linearGradient id="greenGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                    <stop offset="0%" stop-color="#10B981" />
+                                                    <stop offset="100%" stop-color="#10B981" stop-opacity="0" />
+                                                </linearGradient>
+                                            </defs>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <!-- 卡片3 -->
+                                <div class="scrolling-card">
+                                    <div class="flex items-center mb-4">
+                                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center mr-3">
+                                            <img src="images/aicoinLogo.svg" alt="AICoin Logo" class="w-6 h-6">
+                                        </div>
+                                        <div>
+                                            <div class="text-white font-medium">ETH</div>
+                                            <div class="text-gray-400 text-sm">Gate USDT永续</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-green-400 text-2xl font-bold mb-2">+18.32%</div>
+                                    <div class="text-gray-400 text-sm mb-3">7日年化收益率</div>
+                                    <div class="h-16 bg-black bg-opacity-20 rounded-md relative overflow-hidden">
+                                        <svg width="100%" height="100%" viewBox="0 0 100 30" preserveAspectRatio="none">
+                                            <path d="M0,15 L10,18 L20,12 L30,20 L40,15 L50,18 L60,10 L70,15 L80,8 L90,12 L100,8" 
+                                                  stroke="#10B981" fill="none" stroke-width="1.5"></path>
+                                            <path d="M0,15 L10,18 L20,12 L30,20 L40,15 L50,18 L60,10 L70,15 L80,8 L90,12 L100,8 L100,30 L0,30Z" 
+                                                  fill="url(#greenGradient3)" opacity="0.2"></path>
+                                            <defs>
+                                                <linearGradient id="greenGradient3" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                    <stop offset="0%" stop-color="#10B981" />
+                                                    <stop offset="100%" stop-color="#10B981" stop-opacity="0" />
+                                                </linearGradient>
+                                            </defs>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <!-- 卡片4 -->
+                                <div class="scrolling-card">
+                                    <div class="flex items-center mb-4">
+                                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center mr-3">
+                                            <img src="images/aicoinLogo.svg" alt="AICoin Logo" class="w-6 h-6">
+                                        </div>
+                                        <div>
+                                            <div class="text-white font-medium">DOGE</div>
+                                            <div class="text-gray-400 text-sm">火币 USDT永续</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-green-400 text-2xl font-bold mb-2">+15.76%</div>
+                                    <div class="text-gray-400 text-sm mb-3">7日年化收益率</div>
+                                    <div class="h-16 bg-black bg-opacity-20 rounded-md relative overflow-hidden">
+                                        <svg width="100%" height="100%" viewBox="0 0 100 30" preserveAspectRatio="none">
+                                            <path d="M0,18 L10,15 L20,20 L30,12 L40,18 L50,15 L60,20 L70,10 L80,15 L90,12 L100,15" 
+                                                  stroke="#10B981" fill="none" stroke-width="1.5"></path>
+                                            <path d="M0,18 L10,15 L20,20 L30,12 L40,18 L50,15 L60,20 L70,10 L80,15 L90,12 L100,15 L100,30 L0,30Z" 
+                                                  fill="url(#greenGradient4)" opacity="0.2"></path>
+                                            <defs>
+                                                <linearGradient id="greenGradient4" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                    <stop offset="0%" stop-color="#10B981" />
+                                                    <stop offset="100%" stop-color="#10B981" stop-opacity="0" />
+                                                </linearGradient>
+                                            </defs>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <!-- 卡片5 -->
+                                <div class="scrolling-card">
+                                    <div class="flex items-center mb-4">
+                                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center mr-3">
+                                            <img src="images/aicoinLogo.svg" alt="AICoin Logo" class="w-6 h-6">
+                                        </div>
+                                        <div>
+                                            <div class="text-white font-medium">SOL</div>
+                                            <div class="text-gray-400 text-sm">欧易OKX USDT永续</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-green-400 text-2xl font-bold mb-2">+19.45%</div>
+                                    <div class="text-gray-400 text-sm mb-3">7日年化收益率</div>
+                                    <div class="h-16 bg-black bg-opacity-20 rounded-md relative overflow-hidden">
+                                        <svg width="100%" height="100%" viewBox="0 0 100 30" preserveAspectRatio="none">
+                                            <path d="M0,12 L10,15 L20,10 L30,18 L40,12 L50,15 L60,8 L70,12 L80,15 L90,10 L100,12" 
+                                                  stroke="#10B981" fill="none" stroke-width="1.5"></path>
+                                            <path d="M0,12 L10,15 L20,10 L30,18 L40,12 L50,15 L60,8 L70,12 L80,15 L90,10 L100,12 L100,30 L0,30Z" 
+                                                  fill="url(#greenGradient5)" opacity="0.2"></path>
+                                            <defs>
+                                                <linearGradient id="greenGradient5" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                    <stop offset="0%" stop-color="#10B981" />
+                                                    <stop offset="100%" stop-color="#10B981" stop-opacity="0" />
+                                                </linearGradient>
+                                            </defs>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 功能特点 -->
+        <div id="features" class="py-16 relative z-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <p class="mt-1 text-3xl font-extrabold text-white sm:text-4xl sm:tracking-tight heading-spacing">专业套利工具</p>
+                    <p class="max-w-xl mt-5 mx-auto text-xl text-gray-400 section-spacing">提供全方位的套利功能，满足不同用户的需求</p>
+                </div>
+
+                <div class="mt-16">
+                    <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+                        <!-- 功能1：自动赚币 -->
+                        <div class="bg-dark-100 rounded-lg p-6 card-hover">
+                            <div class="w-12 h-12 rounded-md bg-primary/20 flex items-center justify-center">
+                                <i class="fas fa-robot text-primary text-xl"></i>
+                            </div>
+                            <h3 class="mt-4 text-lg font-medium text-white">自动赚币</h3>
+                            <p class="mt-2 text-sm text-gray-300 leading-relaxed">
+                                0门槛实现套利获利，启动程序即可等待每日收益。程序自动开仓平仓、自动风控处理仓位平衡。
+                            </p>
+                        </div>
+
+                        <!-- 功能2：套利开仓平仓 -->
+                        <div class="bg-dark-100 rounded-lg p-6 card-hover">
+                            <div class="w-12 h-12 rounded-md bg-primary/20 flex items-center justify-center">
+                                <i class="fas fa-exchange-alt text-primary text-xl"></i>
+                            </div>
+                            <h3 class="mt-4 text-lg font-medium text-white">套利开仓平仓</h3>
+                            <p class="mt-2 text-sm text-gray-300 leading-relaxed">
+                                支持设定开仓价差率、投入总额、杠杆倍数等，程序执行更灵活，开仓效率更高，平仓收益最大化。
+                            </p>
+                        </div>
+
+                        <!-- 功能3：发现套利机会 -->
+                        <div class="bg-dark-100 rounded-lg p-6 card-hover">
+                            <div class="w-12 h-12 rounded-md bg-primary/20 flex items-center justify-center">
+                                <i class="fas fa-search-dollar text-primary text-xl"></i>
+                            </div>
+                            <h3 class="mt-4 text-lg font-medium text-white">发现套利机会</h3>
+                            <p class="mt-2 text-sm text-gray-300 leading-relaxed">
+                                系统自动为您筛选最佳套利机会，提供主流平台资金费率和价差套利机会，数据对比一目了然。
+                            </p>
+                        </div>
+
+                        <!-- 功能4：套利收益管理 -->
+                        <div class="bg-dark-100 rounded-lg p-6 card-hover">
+                            <div class="w-12 h-12 rounded-md bg-primary/20 flex items-center justify-center">
+                                <i class="fas fa-chart-line text-primary text-xl"></i>
+                            </div>
+                            <h3 class="mt-4 text-lg font-medium text-white">套利收益管理</h3>
+                            <p class="mt-2 text-sm text-gray-300 leading-relaxed">
+                                总览管理所有运行的套利程序，直观查看每个套利的收益情况以及总收益，及时发现程序异常。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 产品优势 -->
+        <div id="advantages" class="py-16 relative z-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
+                    <div>
+                        <h2 class="text-3xl font-extrabold text-white sm:text-4xl heading-spacing">
+                            为什么选择AICoin套利策略工具？
+                        </h2>
+                        <div class="mt-8 space-y-7">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="flex items-center justify-center h-12 w-12 rounded-md bg-primary/20 text-primary">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-white">安全可靠</h3>
+                                    <p class="mt-2 text-base text-gray-400">
+                                        内置风控机制，接近强平时自动减仓，保障资金安全。
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="flex items-center justify-center h-12 w-12 rounded-md bg-primary/20 text-primary">
+                                        <i class="fas fa-bolt"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-white">高效执行</h3>
+                                    <p class="mt-2 text-base text-gray-400">
+                                        毫秒级响应，捕捉稍纵即逝的套利机会，最大化每次交易的收益。
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="flex items-center justify-center h-12 w-12 rounded-md bg-primary/20 text-primary">
+                                        <i class="fas fa-user-cog"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-white">灵活定制</h3>
+                                    <p class="mt-2 text-base text-gray-400">
+                                        支持多种参数自定义，满足不同风险偏好和投资策略的需求。
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="flex items-center justify-center h-12 w-12 rounded-md bg-primary/20 text-primary">
+                                        <i class="fas fa-globe"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-lg font-medium text-white">多平台支持</h3>
+                                    <p class="mt-2 text-base text-gray-400">
+                                        支持主流加密货币交易所，实现跨平台套利，扩大套利机会。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-10 lg:mt-0">
+                        <div class="relative image-stack">
+                            <!-- 第一张图片 -->
+                            <div class="image-container first-image hover-lift">
+                                <img src="images/Content.png" alt="AICoin套利内容" class="rounded-lg shadow-xl w-full">
+                            </div>
+                            <!-- 第二张图片 -->
+                            <div class="image-container second-image hover-lift">
+                                <img src="images/botcard.png" alt="AICoin自动赚币" class="rounded-lg shadow-xl w-full">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ部分 -->
+        <div class="py-16 bg-gray-50 bg-opacity-5 relative z-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-extrabold text-white sm:text-4xl heading-spacing">
+                        常见问题
+                    </h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-400 section-spacing">
+                        了解更多关于AICoin套利工具的信息
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                    <div class="space-y-6">
+                        <!-- FAQ项目1 - 使用details/summary原生HTML折叠功能 -->
+                        <details class="faq-item bg-white bg-opacity-5 backdrop-filter backdrop-blur-lg rounded-xl overflow-hidden transition-all duration-300">
+                            <summary class="w-full px-8 py-5 flex items-center justify-between text-left hover:bg-white hover:bg-opacity-5 transition-colors duration-200 cursor-pointer">
+                                <span class="text-lg font-medium text-white">套利工具支持哪些交易所？</span>
+                                <svg class="faq-toggle w-6 h-6 text-primary transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"></path>
+                                </svg>
+                            </summary>
+                            <div class="px-8 py-5 border-t border-gray-700 border-opacity-20">
+                                <p class="text-gray-300">目前支持币安、欧易OKX、火币、Gate.io、Bitget等主流加密货币交易所，并且我们会持续增加更多交易所的支持。您可以在同一个交易所内进行资金费率套利，也可以在不同交易所之间进行价差套利。</p>
+                            </div>
+                        </details>
+                        
+                        <!-- FAQ项目2 -->
+                        <details class="faq-item bg-white bg-opacity-5 backdrop-filter backdrop-blur-lg rounded-xl overflow-hidden transition-all duration-300">
+                            <summary class="w-full px-8 py-5 flex items-center justify-between text-left hover:bg-white hover:bg-opacity-5 transition-colors duration-200 cursor-pointer">
+                                <span class="text-lg font-medium text-white">套利工具的收益如何计算？</span>
+                                <svg class="faq-toggle w-6 h-6 text-primary transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"></path>
+                                </svg>
+                            </summary>
+                            <div class="px-8 py-5 border-t border-gray-700 border-opacity-20">
+                                <p class="text-gray-300">套利收益根据不同策略有所不同。对于资金费率套利，收益来自于每8小时收取的资金费率；对于价差套利，收益来自于不同市场间的价格差异。系统会自动计算扣除交易手续费后的净收益，并提供详细的收益报表和分析。</p>
+                            </div>
+                        </details>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <!-- FAQ项目3 -->
+                        <details class="faq-item bg-white bg-opacity-5 backdrop-filter backdrop-blur-lg rounded-xl overflow-hidden transition-all duration-300">
+                            <summary class="w-full px-8 py-5 flex items-center justify-between text-left hover:bg-white hover:bg-opacity-5 transition-colors duration-200 cursor-pointer">
+                                <span class="text-lg font-medium text-white">套利工具收费吗？</span>
+                                <svg class="faq-toggle w-6 h-6 text-primary transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"></path>
+                                </svg>
+                            </summary>
+                            <div class="px-8 py-5 border-t border-gray-700 border-opacity-20">
+                                <p class="text-gray-300">套利工具完全免费，下载客户端即可立即使用。</p>
+                            </div>
+                        </details>
+
+                        <!-- FAQ项目4 -->
+                        <details class="faq-item bg-white bg-opacity-5 backdrop-filter backdrop-blur-lg rounded-xl overflow-hidden transition-all duration-300">
+                            <summary class="w-full px-8 py-5 flex items-center justify-between text-left hover:bg-white hover:bg-opacity-5 transition-colors duration-200 cursor-pointer">
+                                <span class="text-lg font-medium text-white">套利工具如何使用？</span>
+                                <svg class="faq-toggle w-6 h-6 text-primary transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"></path>
+                                </svg>
+                            </summary>
+                            <div class="px-8 py-5 border-t border-gray-700 border-opacity-20">
+                                <p class="text-gray-300">套利工具使用非常简单，只需要下载安装客户端，注册账户并完成API密钥设置。在软件中选择您想要的套利策略，设置参数后即可启动自动套利。我们提供详细的新手指南和视频教程，帮助您快速上手。</p>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用户评价 -->
+        <div id="testimonials" class="py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <p class="mt-1 text-4xl font-extrabold text-white sm:text-4xl sm:tracking-tight heading-spacing">用户评价</p>
+                    <p class="max-w-xl mt-5 mx-auto text-xl text-gray-400 section-spacing">来自真实用户的使用体验和收益分享</p>
+                </div>
+                <div class="mt-12 grid gap-8 md:grid-cols-3">
+                    <div class="bg-dark-100 rounded-lg p-6 card-hover">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <img class="h-14 w-14 rounded-full" src="images/avatars/jackson.png" alt="用户头像">
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-medium text-white">John Smith</h3>
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-4 text-gray-400" style="line-height: 1.5;">
+                            "作为加密货币交易新手，AICoin套利工具让我轻松入门。自动赚币功能非常适合我这种没有太多时间盯盘的用户，每天都能看到稳定的收益。"
+                        </p>
+                    </div>
+                    <div class="bg-dark-100 rounded-lg p-6 card-hover">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <img class="h-14 w-14 rounded-full" src="images/avatars/jole.png" alt="用户头像">
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-medium text-white">Sarah Johnson</h3>
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-4 text-gray-400" style="line-height: 1.5;">
+                            "我是专业交易员，AICoin的套利开仓平仓功能给了我很大的灵活性。可以根据自己的策略设置参数，收益比我手动操作时高了不少。"
+                        </p>
+                    </div>
+                    <div class="bg-dark-100 rounded-lg p-6 card-hover">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <img class="h-14 w-14 rounded-full" src="images/avatars/Memoji.png" alt="用户头像">
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-medium text-white">Michael Brown</h3>
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-4 text-gray-400" style="line-height: 1.5;">
+                            "套利收益管理功能非常实用，可以清晰地看到每个套利策略的表现。系统还会自动发送收益报告，让我随时了解资金状况。"
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 下载区域 -->
+        <div id="download" class="py-16 bg-gradient-to-r from-blue-800 to-blue-600">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-3xl font-extrabold">
+                  
+                    <span class="block mt-2">下载AICoin套利工具</span>
+                </h2>
+                <p class="mt-4 max-w-md mx-auto text-xl">
+                    开启高效套利
+                </p>
+                <div class="mt-8 flex justify-center">
+                    <div class="inline-flex rounded-md shadow">
+                        <a href="#" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-white hover:bg-gray-50 hover-scale">
+                            <i class="fab fa-windows mr-2"></i>
+                            Windows版下载
+                        </a>
+                    </div>
+                    <div class="ml-3 inline-flex rounded-md shadow">
+                        <a href="#" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-white hover:bg-gray-50 hover-scale">
+                            <i class="fab fa-apple mr-2"></i>
+                            Mac版下载
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       
+
+        <!-- 页脚 -->
+        <footer class="bg-dark-200 border-t border-gray-800">
+            <!-- ... 页脚内容 ... -->
+        </footer>
+    </div>
+    <!-- 脚本 -->
+    <script>
+        // 创建太空粒子背景和鼠标跟随效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('spaceBackground');
+            if (!container) {
+                console.error('背景容器不存在');
+                return;
+            }
+            
+            // 创建星星 - 增加星星数量，减少互动星星
+            const starCount = 2000; // 从800增加到2000
+            const interactiveStarCount = 0; // 移除所有互动星星
+            const interactiveStars = []; // 存储可互动星星的引用
+            
+            // 创建普通星星
+            for (let i = 0; i < starCount - interactiveStarCount; i++) {
+                createStar(container, false);
+            }
+            
+            // 创建可互动星星 - 现在不会创建任何互动星星
+            for (let i = 0; i < interactiveStarCount; i++) {
+                const star = createStar(container, true);
+                interactiveStars.push({
+                    element: star,
+                    x: parseFloat(star.style.left) / 100 * window.innerWidth,
+                    y: parseFloat(star.style.top) / 100 * window.innerHeight,
+                    size: parseFloat(star.style.width),
+                    intensity: Math.random() * 0.5 + 0.5, // 互动强度
+                    originalX: parseFloat(star.style.left) / 100 * window.innerWidth,
+                    originalY: parseFloat(star.style.top) / 100 * window.innerHeight
+                });
+            }
+            
+            // 鼠标发光效果 - 移除
+            const cursorGlow = document.getElementById('cursorGlow');
+            if (cursorGlow) {
+                cursorGlow.style.display = 'none';
+            }
+            
+            // 移除鼠标移动事件处理
+            // 注释掉或删除鼠标移动事件监听器
+            
+            // 创建星星的函数
+            function createStar(container, isInteractive) {
+                const star = document.createElement('div');
+                star.classList.add(isInteractive ? 'interactive-star' : 'star');
+                
+                // 随机大小 - 减小星星尺寸
+                const size = Math.random() < 0.9 ? 
+                             0.3 + Math.random() * 0.8 : // 90%是更小的星星
+                             0.8 + Math.random() * 1.5;  // 10%是稍大星星
+                
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                
+                // 随机位置
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                
+                if (!isInteractive) {
+                    // 只为非互动星星设置闪烁动画
+                    const duration = 3 + Math.random() * 10;
+                    star.style.setProperty('--duration', `${duration}s`);
+                    star.style.setProperty('--delay', `${Math.random() * 5}s`);
+                    
+                    // 降低星星亮度
+                    const opacity = Math.random() < 0.8 ? 
+                                   0.1 + Math.random() * 0.2 : // 80%是更暗的星星
+                                   0.3 + Math.random() * 0.2;  // 20%是稍亮星星
+                    
+                    star.style.setProperty('--opacity', `${opacity}`);
+                } else {
+                    // 互动星星初始较暗
+                    star.style.opacity = Math.random() * 0.2 + 0.1;
+                }
+                
+                // 随机发光效果 - 减弱发光
+                const glowSize = size * (0.5 + Math.random() * 2);
+                const glowOpacity = 0.05 + Math.random() * 0.1; // 大幅减弱发光
+                
+                // 颜色偏向蓝色系
+                const r = Math.floor(Math.random() * 100);
+                const g = Math.floor(100 + Math.random() * 155);
+                const b = Math.floor(200 + Math.random() * 55);
+                
+                star.style.setProperty('--glow-size', `${glowSize}px`);
+                star.style.setProperty('--glow-color', `rgba(${r}, ${g}, ${b}, ${glowOpacity})`);
+                
+                container.appendChild(star);
+                return star;
+            }
+            
+            console.log('太空背景已创建，星星数量:', starCount);
+        });
+    </script>
+
+    <!-- 添加柱状图动画效果的JavaScript -->
+    <script>
+        // 在页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有柱状图元素
+            const bars = document.querySelectorAll('.chart-bar');
+            
+            // 设置定时器，每隔一段时间更新柱状图高度，模拟数据波动
+            setInterval(function() {
+                bars.forEach(bar => {
+                    // 随机生成新的高度值，但保持在合理范围内
+                    const currentHeight = parseFloat(bar.style.height);
+                    const randomChange = Math.random() * 10 - 5; // -5到5之间的随机值
+                    let newHeight = currentHeight + randomChange;
+                    
+                    // 确保高度在合理范围内
+                    newHeight = Math.max(40, Math.min(100, newHeight));
+                    
+                    // 应用新高度，添加过渡效果
+                    bar.style.transition = 'height 0.8s ease';
+                    bar.style.height = newHeight + '%';
+                });
+            }, 3000); // 每3秒更新一次
+        });
+    </script>
+
+    <script>
+        // 修改脚本，确保所有卡片使用相同的背景样式
+        window.addEventListener('load', function() {
+            // 强制刷新背景层
+            const background = document.getElementById('spaceBackground');
+            if (background) {
+                background.style.display = 'none';
+                setTimeout(function() {
+                    background.style.display = 'block';
+                }, 10);
+            }
+            
+            // 移除之前可能添加的section-overlay类
+            const sections = document.querySelectorAll('.section-overlay');
+            sections.forEach(section => {
+                section.classList.remove('section-overlay');
+            });
+            
+            // 统一所有卡片样式
+            const allCards = document.querySelectorAll('.bg-dark-100, .card-hover, .rounded-lg:not(.hero-section *), .content-card');
+            allCards.forEach(card => {
+                // 移除可能冲突的类
+                card.classList.remove('bg-dark-100');
+                card.classList.remove('content-card');
+                
+                // 添加统一的样式
+                card.style.backgroundColor = 'rgba(26, 32, 44, 0.6)';
+                card.style.backdropFilter = 'blur(15px)';
+                card.style.WebkitBackdropFilter = 'blur(15px)';
+                card.style.borderRadius = '12px';
+                card.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.07)';
+                card.style.border = 'none';
+            });
+        });
+    </script>
+
+    <!-- 添加鼠标发光效果元素 -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <script>
+        // 在页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 处理滚动卡片
+            setupScrollingCards();
+            
+            // 其他现有的脚本...
+        });
+        
+        // 设置滚动卡片
+        function setupScrollingCards() {
+            const container = document.querySelector('.scrolling-cards');
+            const inner = document.querySelector('.scrolling-cards-inner');
+            
+            if (!container || !inner) return;
+            
+            // 获取所有卡片
+            const cards = inner.querySelectorAll('.scrolling-card');
+            if (cards.length === 0) return;
+            
+            // 计算容器宽度和所有卡片的总宽度
+            const containerWidth = container.offsetWidth;
+            const cardWidth = cards[0].offsetWidth + parseInt(getComputedStyle(cards[0]).marginRight);
+            const totalWidth = cardWidth * cards.length;
+            
+            // 如果卡片总宽度小于容器宽度的3倍，复制卡片直到足够长
+            if (totalWidth < containerWidth * 3) {
+                const cloneCount = Math.ceil((containerWidth * 3 - totalWidth) / totalWidth);
+                
+                for (let i = 0; i < cloneCount; i++) {
+                    cards.forEach(card => {
+                        const clone = card.cloneNode(true);
+                        inner.appendChild(clone);
+                    });
+                }
+            }
+            
+            // 更新动画持续时间，基于卡片数量
+            const updatedCards = inner.querySelectorAll('.scrolling-card');
+            const animationDuration = updatedCards.length * 4; // 每张卡片4秒
+            
+            inner.style.animationDuration = `${animationDuration}s`;
+            
+            // 添加鼠标悬停事件
+            container.addEventListener('mouseenter', function() {
+                inner.style.animationPlayState = 'paused';
+            });
+            
+            container.addEventListener('mouseleave', function() {
+                inner.style.animationPlayState = 'running';
+            });
+        }
+    </script>
+
+    <script>
+        // 添加卡片3D倾斜效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为所有卡片添加鼠标移动监听
+            const cards = document.querySelectorAll('.card-hover, .scrolling-card');
+            
+            cards.forEach(card => {
+                // 添加颗粒纹理元素
+                const texture = document.createElement('div');
+                texture.classList.add('card-texture');
+                card.appendChild(texture);
+                
+                card.addEventListener('mousemove', handleCardHover);
+                card.addEventListener('mouseleave', resetCardPosition);
+            });
+            
+            // 处理卡片悬停效果
+            function handleCardHover(e) {
+                const card = this;
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left; // 鼠标在卡片内的X坐标
+                const y = e.clientY - rect.top;  // 鼠标在卡片内的Y坐标
+                
+                // 计算倾斜角度 - 最大倾斜5度
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateY = ((x - centerX) / centerX) * 5; // X轴位置决定Y轴旋转
+                const rotateX = ((centerY - y) / centerY) * 5; // Y轴位置决定X轴旋转
+                
+                // 应用变换
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+                
+                // 添加非常轻微的光泽效果
+                const shine = card.querySelector('.card-shine') || createShineElement(card);
+                const shineX = (x / rect.width) * 100;
+                const shineY = (y / rect.height) * 100;
+                shine.style.background = `radial-gradient(circle at ${shineX}% ${shineY}%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%)`;
+            }
+            
+            // 重置卡片位置
+            function resetCardPosition() {
+                this.style.transform = '';
+                const shine = this.querySelector('.card-shine');
+                if (shine) {
+                    shine.style.background = 'none';
+                }
+            }
+            
+            // 创建光泽元素 - 减弱效果
+            function createShineElement(card) {
+                const shine = document.createElement('div');
+                shine.classList.add('card-shine');
+                shine.style.position = 'absolute';
+                shine.style.top = '0';
+                shine.style.left = '0';
+                shine.style.right = '0';
+                shine.style.bottom = '0';
+                shine.style.pointerEvents = 'none';
+                shine.style.zIndex = '2';
+                shine.style.opacity = '0.1'; // 减弱光泽效果
+                shine.style.borderRadius = '12px';
+                card.appendChild(shine);
+                return shine;
+            }
+            
+            // 其他现有的脚本...
+        });
+    </script>
+
+    <!-- 添加FAQ交互脚本 -->
+    <script>
+        // 确保在页面完全加载后执行
+        window.addEventListener('load', function() {
+            console.clear();
+            console.log('FAQ脚本开始执行 - 页面完全加载');
+            
+            // 直接使用内联函数处理点击事件
+            function handleFAQClick(event) {
+                console.log('FAQ点击事件触发');
+                
+                // 获取当前FAQ项目
+                const question = event.currentTarget;
+                const faqItem = question.closest('.faq-item');
+                const answer = faqItem.querySelector('.faq-answer');
+                const toggle = question.querySelector('.faq-toggle');
+                
+                console.log('找到FAQ元素:', {
+                    question: question,
+                    answer: answer,
+                    toggle: toggle
+                });
+                
+                // 强制设置样式
+                if (answer.style.display === 'block') {
+                    console.log('关闭FAQ');
+                    answer.style.display = 'none';
+                    if (toggle) toggle.setAttribute('style', 'transform: rotate(0deg) !important');
+                } else {
+                    console.log('打开FAQ');
+                    answer.style.display = 'block';
+                    if (toggle) toggle.setAttribute('style', 'transform: rotate(45deg) !important');
+                }
+                
+                // 阻止事件传播
+                event.preventDefault();
+                event.stopPropagation();
+                return false;
+            }
+            
+            // 获取所有FAQ问题
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            console.log('找到FAQ问题数量:', faqQuestions.length);
+            
+            // 移除可能存在的旧事件监听器
+            faqQuestions.forEach(question => {
+                const newQuestion = question.cloneNode(true);
+                question.parentNode.replaceChild(newQuestion, question);
+            });
+            
+            // 重新获取并添加新的事件监听器
+            const newFaqQuestions = document.querySelectorAll('.faq-question');
+            newFaqQuestions.forEach((question, index) => {
+                console.log('为FAQ问题添加点击事件:', index);
+                question.addEventListener('click', handleFAQClick, true);
+                
+                // 添加内联点击处理
+                question.setAttribute('onclick', 'this.closest(".faq-item").querySelector(".faq-answer").style.display = this.closest(".faq-item").querySelector(".faq-answer").style.display === "block" ? "none" : "block"; this.querySelector(".faq-toggle").style.transform = this.closest(".faq-item").querySelector(".faq-answer").style.display === "block" ? "rotate(45deg)" : "rotate(0deg)"; event.preventDefault(); return false;');
+            });
+            
+            // 确保所有答案初始状态为隐藏
+            const faqAnswers = document.querySelectorAll('.faq-answer');
+            faqAnswers.forEach(answer => {
+                console.log('初始化FAQ答案为隐藏');
+                answer.style.display = 'none';
+            });
+            
+            console.log('FAQ脚本初始化完成');
+            
+            // 添加直接测试按钮
+            const testButton = document.createElement('button');
+            testButton.textContent = '测试FAQ功能';
+            testButton.style.position = 'fixed';
+            testButton.style.bottom = '20px';
+            testButton.style.right = '20px';
+            testButton.style.zIndex = '9999';
+            testButton.style.padding = '10px';
+            testButton.style.background = '#4080ff';
+            testButton.style.color = 'white';
+            testButton.style.border = 'none';
+            testButton.style.borderRadius = '5px';
+            testButton.style.cursor = 'pointer';
+            
+            testButton.onclick = function() {
+                console.log('测试按钮点击');
+                const firstQuestion = document.querySelector('.faq-question');
+                if (firstQuestion) {
+                    console.log('模拟点击第一个FAQ问题');
+                    firstQuestion.click();
+                }
+            };
+            
+            document.body.appendChild(testButton);
+        });
+    </script>
+
+    <!-- 添加简单的FAQ交互脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为details元素添加事件监听器，控制图标旋转
+            const details = document.querySelectorAll('details');
+            details.forEach(detail => {
+                detail.addEventListener('toggle', function() {
+                    const toggle = this.querySelector('.faq-toggle');
+                    if (this.open) {
+                        toggle.style.transform = 'rotate(45deg)';
+                    } else {
+                        toggle.style.transform = 'rotate(0deg)';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
