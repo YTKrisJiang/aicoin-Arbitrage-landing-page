@@ -1,6 +1,4 @@
-# aicoin-Arbitrage-landing-page
-
-# AICoin套利策略工具落地页
+# AICoin套利工具落地页
 
 这是AICoin套利策略工具的官方落地页项目，用于展示产品功能和吸引用户下载客户端。
 
