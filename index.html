@@ -542,42 +542,6 @@
     
     <!-- 内容包装器开始 - 所有内容都在这个div内 -->
     <div class="content-wrapper">
-        <!-- 导航栏 -->
-        <!-- <nav class="bg-dark-200 border-b border-gray-800">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-16">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 flex items-center">
-                            <i class="fas fa-coins text-primary text-2xl mr-2"></i>
-                            <span class="font-bold text-xl">AICoin</span>
-                        </div>
-                        <div class="hidden md:ml-6 md:flex md:space-x-8">
-                            <a href="#features" class="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">功能特点</a>
-                            <a href="#advantages" class="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">产品优势</a>
-                            <a href="#testimonials" class="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">用户评价</a>
-                            <a href="#faq" class="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">常见问题</a>
-                        </div>
-                    </div>
-                    <div class="flex items-center">
-                        <a href="#download" class="bg-blue-600 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover-scale">立即下载</a>
-                    </div>
-                    <div class="md:hidden flex items-center">
-                        <button type="button" class="mobile-menu-button text-gray-400 hover:text-white">
-                            <i class="fas fa-bars text-xl"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <!-- 移动端菜单 -->
-         <!--   <div class="mobile-menu hidden md:hidden border-t border-gray-800">
-                <div class="px-2 py-3 space-y-1">
-                    <a href="#features" class="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium">功能特点</a>
-                    <a href="#advantages" class="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium">产品优势</a>
-                    <a href="#testimonials" class="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium">用户评价</a>
-                    <a href="#faq" class="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium">常见问题</a>
-                </div>
-            </div>
-        </nav>
 
         <!-- 英雄区域 - 居中设计 -->
         <div class="relative overflow-hidden">
@@ -1182,31 +1146,7 @@
         });
     </script>
 
-    <!-- 添加柱状图动画效果的JavaScript -->
-    <script>
-        // 在页面加载完成后执行
-        document.addEventListener('DOMContentLoaded', function() {
-            // 获取所有柱状图元素
-            const bars = document.querySelectorAll('.chart-bar');
-            
-            // 设置定时器，每隔一段时间更新柱状图高度，模拟数据波动
-            setInterval(function() {
-                bars.forEach(bar => {
-                    // 随机生成新的高度值，但保持在合理范围内
-                    const currentHeight = parseFloat(bar.style.height);
-                    const randomChange = Math.random() * 10 - 5; // -5到5之间的随机值
-                    let newHeight = currentHeight + randomChange;
-                    
-                    // 确保高度在合理范围内
-                    newHeight = Math.max(40, Math.min(100, newHeight));
-                    
-                    // 应用新高度，添加过渡效果
-                    bar.style.transition = 'height 0.8s ease';
-                    bar.style.height = newHeight + '%';
-                });
-            }, 3000); // 每3秒更新一次
-        });
-    </script>
+   
 
     <script>
         // 修改脚本，确保所有卡片使用相同的背景样式
@@ -1370,101 +1310,7 @@
         });
     </script>
 
-    <!-- 添加FAQ交互脚本 -->
-    <script>
-        // 确保在页面完全加载后执行
-        window.addEventListener('load', function() {
-            console.clear();
-            console.log('FAQ脚本开始执行 - 页面完全加载');
-            
-            // 直接使用内联函数处理点击事件
-            function handleFAQClick(event) {
-                console.log('FAQ点击事件触发');
-                
-                // 获取当前FAQ项目
-                const question = event.currentTarget;
-                const faqItem = question.closest('.faq-item');
-                const answer = faqItem.querySelector('.faq-answer');
-                const toggle = question.querySelector('.faq-toggle');
-                
-                console.log('找到FAQ元素:', {
-                    question: question,
-                    answer: answer,
-                    toggle: toggle
-                });
-                
-                // 强制设置样式
-                if (answer.style.display === 'block') {
-                    console.log('关闭FAQ');
-                    answer.style.display = 'none';
-                    if (toggle) toggle.setAttribute('style', 'transform: rotate(0deg) !important');
-                } else {
-                    console.log('打开FAQ');
-                    answer.style.display = 'block';
-                    if (toggle) toggle.setAttribute('style', 'transform: rotate(45deg) !important');
-                }
-                
-                // 阻止事件传播
-                event.preventDefault();
-                event.stopPropagation();
-                return false;
-            }
-            
-            // 获取所有FAQ问题
-            const faqQuestions = document.querySelectorAll('.faq-question');
-            console.log('找到FAQ问题数量:', faqQuestions.length);
-            
-            // 移除可能存在的旧事件监听器
-            faqQuestions.forEach(question => {
-                const newQuestion = question.cloneNode(true);
-                question.parentNode.replaceChild(newQuestion, question);
-            });
-            
-            // 重新获取并添加新的事件监听器
-            const newFaqQuestions = document.querySelectorAll('.faq-question');
-            newFaqQuestions.forEach((question, index) => {
-                console.log('为FAQ问题添加点击事件:', index);
-                question.addEventListener('click', handleFAQClick, true);
-                
-                // 添加内联点击处理
-                question.setAttribute('onclick', 'this.closest(".faq-item").querySelector(".faq-answer").style.display = this.closest(".faq-item").querySelector(".faq-answer").style.display === "block" ? "none" : "block"; this.querySelector(".faq-toggle").style.transform = this.closest(".faq-item").querySelector(".faq-answer").style.display === "block" ? "rotate(45deg)" : "rotate(0deg)"; event.preventDefault(); return false;');
-            });
-            
-            // 确保所有答案初始状态为隐藏
-            const faqAnswers = document.querySelectorAll('.faq-answer');
-            faqAnswers.forEach(answer => {
-                console.log('初始化FAQ答案为隐藏');
-                answer.style.display = 'none';
-            });
-            
-            console.log('FAQ脚本初始化完成');
-            
-            // 添加直接测试按钮
-            const testButton = document.createElement('button');
-            testButton.textContent = '测试FAQ功能';
-            testButton.style.position = 'fixed';
-            testButton.style.bottom = '20px';
-            testButton.style.right = '20px';
-            testButton.style.zIndex = '9999';
-            testButton.style.padding = '10px';
-            testButton.style.background = '#4080ff';
-            testButton.style.color = 'white';
-            testButton.style.border = 'none';
-            testButton.style.borderRadius = '5px';
-            testButton.style.cursor = 'pointer';
-            
-            testButton.onclick = function() {
-                console.log('测试按钮点击');
-                const firstQuestion = document.querySelector('.faq-question');
-                if (firstQuestion) {
-                    console.log('模拟点击第一个FAQ问题');
-                    firstQuestion.click();
-                }
-            };
-            
-            document.body.appendChild(testButton);
-        });
-    </script>
+   
 
     <!-- 添加简单的FAQ交互脚本 -->
     <script>
@@ -1484,35 +1330,6 @@
         });
     </script>
 
-    <!-- 修复FAQ交互脚本 -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 获取所有details元素
-            const faqItems = document.querySelectorAll('details.faq-item');
-            
-            // 为每个details元素添加toggle事件监听器
-            faqItems.forEach(item => {
-                // 获取对应的toggle图标
-                const toggle = item.querySelector('.faq-toggle');
-                
-                // 添加事件监听
-                item.addEventListener('toggle', function() {
-                    if (this.open) {
-                        // 展开状态 - 旋转图标45度
-                        toggle.style.transform = 'rotate(45deg)';
-                    } else {
-                        // 折叠状态 - 恢复图标
-                        toggle.style.transform = 'rotate(0deg)';
-                    }
-                });
-            });
-            
-            // 移除测试按钮（如果存在）
-            const testButton = document.getElementById('faqTestButton');
-            if (testButton) {
-                testButton.remove();
-            }
-        });
-    </script>
+   
 </body>
 </html>
