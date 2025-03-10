@@ -1627,6 +1627,8 @@
                     features[3].querySelector('h3').setAttribute('data-i18n', 'feature4-title');
                     features[3].querySelector('p').setAttribute('data-i18n', 'feature4-desc');
                 }
+
+                
                 
                 // 产品优势部分 - 使用基于内容的匹配而非索引
                 const advantagesContainer = document.querySelector('.mt-8.space-y-7');
@@ -1754,6 +1756,22 @@
                 console.log('所有需要翻译的元素已标记完成');
             } catch (error) {
                 console.error('标记翻译元素时发生错误:', error);
+            }
+            
+            // 为什么选择AICoin部分标题 - 使用更精确的选择器
+            const whyChooseTitle = document.querySelector('#advantages h2.text-3xl.font-extrabold.text-white');
+            if (whyChooseTitle) {
+                whyChooseTitle.setAttribute('data-i18n', 'why-choose');
+                console.log('设置"为什么选择"标题');
+            } else {
+                // 备用方案：通过文本内容查找
+                const titleByText = findElementByText('h2', '为什么选择AICoin套利策略工具');
+                if (titleByText) {
+                    titleByText.setAttribute('data-i18n', 'why-choose');
+                    console.log('通过文本找到并设置"为什么选择"标题');
+                } else {
+                    console.warn('未找到"为什么选择"标题元素');
+                }
             }
         }
         
