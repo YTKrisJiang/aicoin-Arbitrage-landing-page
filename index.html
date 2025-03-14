@@ -1824,30 +1824,7 @@
             console.log(`已更新 ${updatedCount} 个元素的翻译，${missingCount} 个元素缺少翻译`);
         }
         
-        // 添加一个辅助函数来根据文本内容找到相应区域
-        function findSectionByText(regex) {
-            // 查找所有可能的标题元素
-            const allHeadings = document.querySelectorAll('h1, h2, h3, .text-3xl, .text-4xl, .font-extrabold');
-            
-            // 找到匹配文本的标题
-            for (const heading of allHeadings) {
-                if (regex.test(heading.textContent)) {
-                    // 找到后返回包含该标题的区域（section、div等）
-                    let section = heading.closest('section, [id], [class*="section"], [class*="container"], div.py-16, div.py-12');
-                    if (!section) {
-                        // 如果没有找到合适的容器，尝试向上查找几层父元素
-                        let parent = heading.parentElement;
-                        for (let i = 0; i < 3 && parent; i++) {
-                            section = parent;
-                            parent = parent.parentElement;
-                        }
-                    }
-                    return section;
-                }
-            }
-            
-            return null;
-        }
+        
         
         // 页面加载时初始化
         document.addEventListener('DOMContentLoaded', function() {
